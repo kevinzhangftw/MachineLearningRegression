@@ -18,30 +18,21 @@ t_train = targets[0:N_TRAIN]
 t_test = targets[N_TRAIN:]
 
 training_set = np.array(values[0:100,7:])
-training_targets = values[0:100, 1]
 
 #question 4.2.1
-#calculateErrors for degree 1
+#plot the minimized error for each degree up to 6
+feature_start_index = 3
+feature_end_index = 44
+
+
+def calculateErrors
+  degree = 1
   e_train = trainingError(training_set, 1)
-  #e_test = testingError(testing_set, 1)
+  e_test = testingError(testing_set, 1)
+  # get training error for degree 1
+  # get test error for degree 1
 
-def trainingError(training_set, degree)
-  designMatrix = designify(training_set, degree)
-  
-  inv = np.linalg.pinv(np.dot(design_matrix.T,design_matrix))
-
-  weights = np.dot(np.dot(inv,design_matrix.T),train_targets)
-  
-  predicted_target = np.dot(design_matrix, weights)
-
-  diff = predicted_target - training_target_set
-
-  training_error = 1/2 * np.dot(diff, diff.T)
-
-
-  return training_error
-
-def designify(training_set, degree)
+def designifyPolynomial(training_input_set, int degree)
   # bias column 
   # make a column of ones
   design_matrix = np.ones((100,), dtype=np.int)
@@ -52,6 +43,25 @@ def designify(training_set, degree)
     design_matrix=np.concatenate((design_matrix, np.power(design_matrix, degree)), axis=1)
 
   return design_matrix
+
+
+def trainingError(matrix training_set, int degree)
+  training_target_set = values[0:100, 1]
+  training_input_set = values[0:100,7:]
+
+  designMatrix = designify(training_input_set, degree)
+  #TODO: inspect size of design matrix for certainty
+
+  #fancy one-liner here...
+  #weights = np.linalg.pinv(designMatrix) * training_target_set
+  #weights = ( designMatrix * designMatrix^T ) * designMatrix^-1 * training_target_set
+  
+  #predicted_target = weights * design matrix
+
+  #error = 1/2 * dot_product(predicted_target - training_target_set)
+
+
+  return float of error ...
 
 def plotError
   # plot against polynomial degree
