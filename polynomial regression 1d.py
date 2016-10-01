@@ -44,12 +44,29 @@ train_error_13 = trainingError(feature13_train,3)
 train_error_14 = trainingError(feature14_train,3)
 train_error_15 = 15
 
-# Produce a plot of results.
-plt.bar([8,9,10,11,12,13,14,15], [train_error_8,train_error_9,train_error_10,train_error_11,train_error_12,train_error_13,train_error_14,train_error_15])
-#plt.plot(test_err.keys(), test_err.values())
-plt.ylabel('RMSE')
-plt.title('4.2 Bar Chart')
-plt.xlabel('features 8-15')
+# Produce bar chart .
+#plt.bar([8,9,10,11,12,13,14,15], [train_error_8,train_error_9,train_error_10,train_error_11,train_error_12,train_error_13,train_error_14,train_error_15])
+#plt.ylabel('RMSE')
+#plt.title('4.2 Bar Chart')
+#plt.xlabel('features 8-15')
+
+#Produce feature 11 GNI
+plt.plot(feature11_train, training_targets, 'o')
+plt.ylabel('mortality')
+plt.title('4.2 Feature 11 GNI')
+plt.xlabel('GNI')
 plt.show()
 
+#Produce feature 12 Life expectancy
+plt.plot(feature12_train, training_targets, 'o')
+plt.ylabel('mortality')
+plt.title('4.2 Feature 12 Life Expectancy')
+plt.xlabel('Life expectancy')
+plt.show()
 
+#Produce feature 13 Literacy
+plt.plot(feature13_train, training_targets, 'o')
+plt.ylabel('mortality')
+plt.title('4.2 Feature 13 Literacy')
+plt.xlabel('Literacy')
+plt.show()
