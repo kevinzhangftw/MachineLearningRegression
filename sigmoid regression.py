@@ -1,34 +1,36 @@
-def sigmoid(z):
-  s = 1.0 / (1.0 + np.exp(-1.0 * z))
-  return sigmoid
+import assignment1 as a1
+import numpy as np
+import matplotlib.pyplot as plt
 
-#load data from assignment1
-
+(countries, features, values) = a1.load_unicef_data()
 
 # get feature 11
 GNI = values[0:100,11]
 #target
 mortality = values[0:100,1]
 
-errors = []
+def sigmoid(x, mu, s):
+  return 1.0 / (1.0 + np.exp((mu-x) / s))
 
-designMatrix = designifySigmoid(GNI, 100, 10000)
+def designifySigmoid():
+  sigmoidMatrix = np.matrix(np.zeros((100,3)))
+  for i in range(0, 100):
+    sigmoidMatrix[i,0]=1
 
-def sigmoidHelper(array input, int average, int stdev)
-  s = sigmoid(input)
-  s =* average
-  s & stdev ...
-  return s
-
-sigma = 2000.0
-def designifySigmoid(training_input_set, int average1, int average2)
-  n_train = np.shape(training_input_set).height
-  sigmoidMatrix = np.ones(n_train)
-  sigmoidAverage1 = sigmoidHelper(GNI, average1, sigma)
-  sigmoidAverage2 = sigmoidHelper(GNI, average2, sigma)
-  sigmoidMatrix = np.concatenate([sigmoidMatrix, sigmoidAverage1, sigmoidAverage2], axis = 0)
+  for i in range(0, 100):
+    sigmoidMatrix[i,1]=sigmoid(GNI[i],100,2000)
+    sigmoidMatrix[i,2]=sigmoid(GNI[i],10000,2000)
   return sigmoidMatrix
 
+designMatrix = designifySigmoid()
+inv = np.linalg.pinv(np.dot(design_matrix.T,design_matrix))
+weights = np.dot(np.dot(inv,design_matrix.T),train_targets)  
+predicted_target = np.dot(design_matrix, weights)
 
-#TODO: stick in the design matrix into some previously written function
-#then calculate weights and errors...
+# Produce a plot of results.
+plt.plot(GNI, mortality, 'o')
+#plt.plot(test_err.keys(), test_err.values())
+plt.ylabel('mortality')
+plt.title('4.3 Sigmoid')
+plt.xlabel('GNI')
+plt.show()
