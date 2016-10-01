@@ -14,14 +14,16 @@ N_TRAIN = 100;
 x_train = x[0:N_TRAIN,:]
 x_test = x[N_TRAIN:,:]
 
-
+#precondition: degree must range from 1 to 6
 def designify(training_set, degree):
   # bias column 
   # make a column of ones
-  design_matrix = np.matrix(np.zeros((100,1)))
+  design_matrix = np.matrix(np.zeros((training_set.shape[0],1)))
+  for i in range(0, training_set.shape[0]):
+    design_matrix[i,0]=1
   design_matrix = np.concatenate((design_matrix,training_set), axis=1)
   # for each degree 
-  for i in range(2,degree):
+  for i in range(1,degree):
     #concatenate the feature
     design_matrix=np.concatenate((design_matrix, np.power(design_matrix, degree)), axis=1)
   return design_matrix
