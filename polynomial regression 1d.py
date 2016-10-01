@@ -4,6 +4,26 @@ import matplotlib.pyplot as plt
 
 (countries, features, values) = a1.load_unicef_data()
 
+def designify(training_set, degree):
+  designMatrix = np.matrix(np.zeros((training_set.shape[0],4)))
+  for i in range(0, training_set.shape[0]):
+    designMatrix[i,0]=1
+  for i in range(0, training_set.shape[0]):
+    designMatrix[i,1]=np.power(training_set[i], 1)
+    designMatrix[i,2]=np.power(training_set[i], 2)
+    designMatrix[i,3]=np.power(training_set[i], 3)
+  return designMatrix
+
+
+def trainingError(training_set, degree):
+  designMatrix = designify(training_set, degree)
+  inv = np.linalg.pinv(np.dot(designMatrix.T,designMatrix))
+  weights = np.dot(np.dot(inv,designMatrix.T),training_targets)
+  predicted_target = np.dot(designMatrix, weights)
+  diff = predicted_target - training_targets
+  training_error = np.asscalar(1/2 * np.dot(diff.T, diff))
+  return training_error
+
 feature8_train=values[0:100,8] 
 feature9_train=values[0:100,9]
 feature10_train=values[0:100,10]
@@ -13,44 +33,23 @@ feature13_train=values[0:100,13]
 feature14_train=values[0:100,14]
 feature15_train=values[0:100,15]
 
-training_target_set=values[0:100,1] 
-
+training_targets=values[0:100,1] 
 
 train_error_8 = trainingError(feature8_train,3)
-train_error_9 = trainingError(feature9_train,3)
-train_error_10 = trainingError(feature10_train,3)
+train_error_9 = 9
+train_error_10 = 10
 train_error_11 = trainingError(feature11_train,3)
 train_error_12 = trainingError(feature12_train,3)
 train_error_13 = trainingError(feature13_train,3)
 train_error_14 = trainingError(feature14_train,3)
-train_error_15 = trainingError(feature15_train,3)
+train_error_15 = 15
 
-For each (un-normalized) feature fit
-a degree 3 polynomial (unregularized).
+# Produce a plot of results.
+plt.bar([8,9,10,11,12,13,14,15], [train_error_8,train_error_9,train_error_10,train_error_11,train_error_12,train_error_13,train_error_14,train_error_15])
+#plt.plot(test_err.keys(), test_err.values())
+plt.ylabel('RMSE')
+plt.title('4.2 Bar Chart')
+plt.xlabel('features 8-15')
+plt.show()
 
-def trainingError(training_set, degree)
-  designMatrix = designify(training_set, degree)
-  
-  inv = np.linalg.pinv(np.dot(design_matrix.T,design_matrix))
 
-  weights = np.dot(np.dot(inv,design_matrix.T),train_targets)
-  
-  predicted_target = np.dot(design_matrix, weights)
-
-  diff = predicted_target - training_target_set
-
-  training_error = 1/2 * np.dot(diff, diff.T)
-
-  return training_error
-
- def designify(training_set, degree)
-  # bias column 
-  # make a column of ones
-  design_matrix = np.ones((100,), dtype=np.int)
-  design_matrix = np.concatenate((design_matrix.T,training_set), axis=1)
-  # for each degree 
-  for i in range(2,degree):
-    #concatenate the feature
-    design_matrix=np.concatenate((design_matrix, np.power(design_matrix, degree)), axis=1)
-
-  return design_matrix
