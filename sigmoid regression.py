@@ -33,12 +33,12 @@ def calculateWeights(designMatrix):
 
 def calculateTrainingError(predicted_target):
   diff = predicted_target - mortality
-  training_error = 1/2 * np.dot(diff, diff.T)
+  training_error = 1/2 * np.dot(diff.T, diff)
   return training_error
 
 def calculateTestError(predicted_target):
   diff = predicted_target - mortality_test
-  test_error = 1/2 * np.dot(diff, diff.T)
+  test_error = 1/2 * np.dot(diff.T, diff)
   return test_error
 
 designMatrix = designifySigmoid(GNI, 100)
