@@ -30,11 +30,12 @@ def designify(training_set, degree):
 
 def trainingError(training_set, degree):
   designMatrix = designify(training_set, degree)
-  inv = np.linalg.pinv(np.dot(designMatrix.T,designMatrix))
-  weights = np.dot(np.dot(inv,designMatrix.T),training_targets)
+  inv = np.linalg.pinv(designMatrix)
+  weights = np.dot(inv,training_targets)
   predicted_target = np.dot(designMatrix, weights)
   diff = predicted_target - training_targets
-  training_error = 1/2 * np.dot(diff, diff.T)
+  training_error = np.dot(diff.T, diff).item()
+  training_error = training_error/2
   return training_error
 
 #question 4.2.1

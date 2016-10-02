@@ -33,7 +33,8 @@ def calculateWeights(designMatrix):
 
 def calculateTrainingError(predicted_target):
   diff = predicted_target - mortality
-  training_error = 1/2 * np.dot(diff.T, diff)
+  training_error = np.dot(diff.T, diff).item()
+  training_error = training_error/2
   return training_error
 
 def calculateTestError(predicted_target):
