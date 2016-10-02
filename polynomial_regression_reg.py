@@ -49,13 +49,5 @@ x_val1_target = x_train[0:10,1]
 
 x_train1 = x_train[11:N_TRAIN,:]
 x_train1_target = x_train[11:N_TRAIN,1]
-#find the weightsfor train 1
 
-
-Implement L2-regularized regression. 
-Fit a degree 2 polynomial using λ = {0, .01, .1, 1, 10, 102, 103, 104}.
-
-Use normalized features as input. 
-Use 10-fold cross-validation to decide on the best value for λ. 
-Produce a plot of average validation set error versus λ. 
-Use a matplotlib.pyplot.semilogx plot, putting λ on a log scale2.
+#val_1 error at lambda 0
