@@ -27,8 +27,8 @@ def designifySigmoid(training_set, length):
   return sigmoidMatrix
 
 def calculateWeights(designMatrix):
-  inv = np.linalg.pinv(np.dot(designMatrix.T,designMatrix))
-  weights = np.dot(np.dot(inv,designMatrix.T),mortality)
+  inv = np.linalg.pinv(designMatrix)
+  weights = np.dot(inv,mortality)
   return weights
 
 def calculateTrainingError(predicted_target):
