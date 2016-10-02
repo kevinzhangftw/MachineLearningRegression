@@ -14,11 +14,10 @@ def designify(training_set, degree):
     designMatrix[i,3]=np.power(training_set[i], 3)
   return designMatrix
 
-
 def trainingError(training_set, degree):
   designMatrix = designify(training_set, degree)
-  inv = np.linalg.pinv(np.dot(designMatrix.T,designMatrix))
-  weights = np.dot(np.dot(inv,designMatrix.T),training_targets)
+  inv = np.linalg.pinv(designMatrix)
+  weights = np.dot(inv,training_targets)
   predicted_target = np.dot(designMatrix, weights)
   diff = predicted_target - training_targets
   training_error = np.asscalar(1/2 * np.dot(diff.T, diff))
@@ -45,10 +44,11 @@ train_error_14 = trainingError(feature14_train,3)
 train_error_15 = 15
 
 # Produce bar chart .
-#plt.bar([8,9,10,11,12,13,14,15], [train_error_8,train_error_9,train_error_10,train_error_11,train_error_12,train_error_13,train_error_14,train_error_15])
-#plt.ylabel('RMSE')
-#plt.title('4.2 Bar Chart')
-#plt.xlabel('features 8-15')
+plt.bar([8,9,10,11,12,13,14,15], [train_error_8,train_error_9,train_error_10,train_error_11,train_error_12,train_error_13,train_error_14,train_error_15])
+plt.ylabel('RMSE')
+plt.title('4.2 Bar Chart')
+plt.xlabel('features 8-15')
+plt.show()
 
 #Produce feature 11 GNI
 plt.plot(feature11_train, training_targets, 'o')
