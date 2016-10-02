@@ -48,7 +48,7 @@ designMatrixTest = designifySigmoid(GNI_test, 195-101)
 
 weights = calculateWeights(designMatrix)
 predicted_target = np.dot(designMatrixX, weights)
- 
+
 predicted_test_target = np.dot(designMatrixTest, weights)
 
 training_error = calculateTrainingError(predicted_target)
