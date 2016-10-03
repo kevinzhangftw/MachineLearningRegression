@@ -5,16 +5,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 (countries, features, values) = a1.load_unicef_data()
-values = a1.normalize_data(values)
+# values = a1.normalize_data(values[:,7:])
 training_set = values[0:100,7:]
 training_targets = values[0:100,1]
 test_set = values[101:,7:]
 test_targets = values[101:,1]
-x = values[:,7:]
-x = a1.normalize_data(x)
-N_TRAIN = 100;
-x_train = x[0:N_TRAIN,:]
-x_test = x[N_TRAIN:,:]
+# x = values[:,7:]
+# x = a1.normalize_data(x)
+# N_TRAIN = 100;
+# x_train = x[0:N_TRAIN,:]
+# x_test = x[N_TRAIN:,:]
 
 #precondition: degree must range from 1 to 6
 def designify(set, degree):
@@ -44,7 +44,7 @@ def weightsFrom(designMatrix, targets):
   return np.dot(inv,training_targets)
 
 def differenceFrom(designMatrix, weights, targets):
-  predicted_target = np.dot(designMatrix, weights) #TODO
+  predicted_target = np.dot(designMatrix, weights)
   return predicted_target - targets
 
 def errorFrom(diff):
