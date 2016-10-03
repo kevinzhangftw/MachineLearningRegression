@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 
 (countries, features, values) = a1.load_unicef_data()
 
+x = values[:,7:]
+x = a1.normalize_data(x)
+
+
 def designify(training_set, degree):
   designMatrix = np.matrix(np.zeros((training_set.shape[0],degree+1)))
   for i in range(0, training_set.shape[0]):
@@ -27,18 +31,17 @@ def trainingError(training_set, degree):
   weights = np.dot(inv,training_targets)
   predicted_target = np.dot(designMatrix, weights)
   diff = predicted_target - training_targets
-  training_error = np.dot(diff.T, diff).item()
-  training_error = training_error/2
+  training_error = np.sqrt(np.dot(diff.T, diff).item()/diff.shape[0])
   return training_error
 
-feature8_train=values[0:100,8] 
-feature9_train=values[0:100,9]
-feature10_train=values[0:100,10]
-feature11_train=values[0:100,11]
-feature12_train=values[0:100,12]
-feature13_train=values[0:100,13]
-feature14_train=values[0:100,14]
-feature15_train=values[0:100,15]
+feature8_train=x[0:100,8] 
+feature9_train=x[0:100,9]
+feature10_train=x[0:100,10]
+feature11_train=x[0:100,11]
+feature12_train=x[0:100,12]
+feature13_train=x[0:100,13]
+feature14_train=x[0:100,14]
+feature15_train=x[0:100,15]
 
 training_targets=values[0:100,1] 
 
