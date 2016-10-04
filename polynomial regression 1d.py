@@ -59,26 +59,28 @@ for i in xrange(0,8):
 	weights = gettingWeights(features_TRAIN[i],target_TRAIN)
 	test_ERROR[i] = testError(weights, features_TEST[i], target_TEST)
 
+#wish linspace from features_train 11 12 13
+linspace11 = np.linspace(np.asscalar(min(features_TRAIN[3])), np.asscalar(max(features_TRAIN[3])), num=500)
+weights11 = gettingWeights(features_TRAIN[3],target_TRAIN)
+linspaceMatrix11 = designify(np.asmatrix(linspace11).T)
+linspacePredict11 = np.dot(linspaceMatrix11, weights11)
 
-predicted_target11 = gettingPredictedTarget(feature11_trainX)
-predicted_target12 = gettingPredictedTarget(feature12_trainX)
-predicted_target13 = gettingPredictedTarget(feature13_trainX)
 
 # Produce bar chart .
-index = np.arange(8)
-barWidth = 0.35
-plt.bar(index, train_ERROR, 0.35, alpha=1,
-                 color='b',
-                 label='Train Error')
+# index = np.arange(8)
+# barWidth = 0.35
+# plt.bar(index, train_ERROR, 0.35, alpha=1,
+#                  color='b',
+#                  label='Train Error')
 
-plt.bar(index+barWidth, test_Error, 0.35, alpha=1,
-                 color='r',
-                 label='Test Error')
+# plt.bar(index+barWidth, test_ERROR, 0.35, alpha=1,
+#                  color='r',
+#                  label='Test Error')
 
-plt.ylabel('RMSE')
-plt.title('4.2 Bar Chart')
-plt.xlabel('features 8-15')
-plt.show()
+# plt.ylabel('RMSE')
+# plt.title('4.2 Bar Chart')
+# plt.xlabel('features 8-15')
+# plt.show()
 
 #Produce feature 11 GNI
 plt.plot(feature11_train, training_targets, 'o')
