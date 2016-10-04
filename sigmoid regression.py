@@ -2,63 +2,80 @@ import assignment1 as a1
 import numpy as np
 import matplotlib.pyplot as plt
 (countries, features, values) = a1.load_unicef_data()
-# get feature 11
-GNI = values[0:100,11]
-#feature 11 sorted out 
-GNIx= np.linspace(np.asscalar(min(GNI)), np.asscalar(max(GNI)), num=100)
-#target
-mortality = values[0:100,1]
-#test data
-GNI_test = values[101:,11]
-#target
-mortality_test = values[101:,1]
+
+inputValues = values[:,7:]
+# inputValues = a1.normalize_data(inputValues)
+N_TRAIN = 100;
+
+features_TRAIN = np.zeros((8, 100,1))
+target_TRAIN = values[:N_TRAIN,1]
+train_ERROR = np.zeros(8)
+
+features_TEST = np.zeros((8, 95, 1))
+target_TEST = values[N_TRAIN:,1]
+test_ERROR = np.zeros(8)
 
 def sigmoid(x, mu, s):
   return 1.0 / (1.0 + np.exp((mu-x) / s))
 
-def designifySigmoid(training_set, length):
-  sigmoidMatrix = np.matrix(np.zeros((length,3)))
-  for i in range(0, length):
-    sigmoidMatrix[i,0]=1
-
-  for i in range(0, length):
-    sigmoidMatrix[i,1]=sigmoid(training_set[i],100,2000)
-    sigmoidMatrix[i,2]=sigmoid(training_set[i],10000,2000)
+def designifySigmoid(set):
+  sigmoidMatrix = np.ones((set.shape[0],3))
+  for i in range(0, set.shape[0]):
+    sigmoidMatrix[i,1]=sigmoid(set[i],100,2000)
+    sigmoidMatrix[i,2]=sigmoid(set[i],10000,2000)
   return sigmoidMatrix
 
-def calculateWeights(designMatrix):
+
+def gettingWeights(training_set,training_targets):
+  designMatrix = designifySigmoid(training_set)
   inv = np.linalg.pinv(designMatrix)
-  weights = np.dot(inv,mortality)
+  weights = np.dot(inv,training_targets)
   return weights
 
-def calculateTrainingError(predicted_target):
-  diff = predicted_target - mortality
-  training_error = np.dot(diff.T, diff).item()
-  training_error = training_error/2
+def trainingError(training_set, training_targets):
+  designMatrix = designifySigmoid(training_set)
+  inv = np.linalg.pinv(designMatrix)
+  weights = np.dot(inv,training_targets)
+  predicted_target = np.dot(designMatrix, weights)
+  diff = predicted_target - training_targets
+  training_error = np.sqrt(np.dot(diff.T, diff).item()/diff.shape[0])
   return training_error
 
-def calculateTestError(predicted_target):
-  diff = predicted_target - mortality_test
-  test_error = 1/2 * np.dot(diff.T, diff)
+def testError(weights, test_set, test_targets):
+  testMatrix = designifySigmoid(test_set)
+  predicted_target = np.dot(testMatrix, weights)
+  diff = predicted_target - test_targets
+  test_error = np.sqrt(np.dot(diff.T, diff).item()/diff.shape[0])
   return test_error
 
-designMatrix = designifySigmoid(GNI, 100)
-designMatrixX = designifySigmoid(GNIx, 100)
-designMatrixTest = designifySigmoid(GNI_test, 195-101)
+def gettingLinspacepredict(features_TRAIN, target_TRAIN, featureIndex, linspace):
+  linspaceposition = featureIndex - 3
+  linspace[linspaceposition] = np.transpose(np.asmatrix(np.linspace(np.amin(features_TRAIN[featureIndex]), np.amax(features_TRAIN[featureIndex]), num=500)))
+  weights = gettingWeights(features_TRAIN[featureIndex],target_TRAIN)
+  linspaceMatrix = designifySigmoid(linspace[linspaceposition])
+  linspacePredictTarget = np.dot(linspaceMatrix, weights)
+  return linspacePredictTarget
 
-weights = calculateWeights(designMatrix)
-predicted_target = np.dot(designMatrixX, weights)
+#getting feature 11
+i=3
+features_TRAIN[i] = inputValues[0:N_TRAIN,i]
+features_TEST[i] = inputValues[N_TRAIN:,i]
+train_ERROR[i] = trainingError(features_TRAIN[i], target_TRAIN)
+weights = gettingWeights(features_TRAIN[i],target_TRAIN)
+test_ERROR[i] = testError(weights, features_TEST[i], target_TEST)
 
-predicted_test_target = np.dot(designMatrixTest, weights)
+linspace = np.zeros((3, 500,1))
+linspacePredict = np.zeros((3, 500,1))
+linspacePredict[0] = gettingLinspacepredict(features_TRAIN, target_TRAIN, 3, linspace)
 
-training_error = calculateTrainingError(predicted_target)
-test_error = calculateTestError(predicted_test_target)
+def gettingPlot(ylabel, title, xlabel):
+  plt.plot(features_TRAIN[3], target_TRAIN, 'o')
+  plt.plot(features_TEST[3], target_TEST, 'o')
+  plt.plot(linspace[0], linspacePredict[0])
+  plt.ylabel(ylabel)
+  plt.title(title)
+  plt.xlabel(xlabel)
+  plt.show()
 
-# Produce a plot of results.
-plt.plot(GNI, mortality, 'o')
-plt.plot(GNIx, predicted_target)
-#plt.plot(test_err.keys(), test_err.values())
-plt.ylabel('mortality')
-plt.title('4.3 Sigmoid')
-plt.xlabel('GNI')
-plt.show()
+gettingPlot('mortality', '4.3 Sigmoid Feature 11', 'GNI')
+
