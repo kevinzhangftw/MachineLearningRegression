@@ -60,7 +60,7 @@ for i in xrange(0,8):
 	test_ERROR[i] = testError(weights, features_TEST[i], target_TEST)
 
 #wish linspace from features_train 11 12 13
-linspace11 = np.linspace(np.asscalar(min(features_TRAIN[3])), np.asscalar(max(features_TRAIN[3])), num=500)
+linspace11 = np.linspace(np.amin(features_TRAIN[3]), np.amax(features_TRAIN[3]), num=500)
 weights11 = gettingWeights(features_TRAIN[3],target_TRAIN)
 linspaceMatrix11 = designify(np.asmatrix(linspace11).T)
 linspacePredict11 = np.dot(linspaceMatrix11, weights11)
@@ -83,25 +83,26 @@ linspacePredict11 = np.dot(linspaceMatrix11, weights11)
 # plt.show()
 
 #Produce feature 11 GNI
-plt.plot(feature11_train, training_targets, 'o')
-plt.plot(feature11_trainX, predicted_target11)
+plt.plot(features_TRAIN[3], target_TRAIN, 'o')
+plt.plot(features_TEST[3], target_TEST, 'o')
+plt.plot(linspace11, linspacePredict11)
 plt.ylabel('mortality')
 plt.title('4.2 Feature 11 GNI')
 plt.xlabel('GNI')
 plt.show()
 
-#Produce feature 12 Life expectancy
-plt.plot(feature12_train, training_targets, 'o')
-plt.plot(feature12_trainX, predicted_target12)
-plt.ylabel('mortality')
-plt.title('4.2 Feature 12 Life Expectancy')
-plt.xlabel('Life expectancy')
-plt.show()
+# #Produce feature 12 Life expectancy
+# plt.plot(feature12_train, training_targets, 'o')
+# plt.plot(feature12_trainX, predicted_target12)
+# plt.ylabel('mortality')
+# plt.title('4.2 Feature 12 Life Expectancy')
+# plt.xlabel('Life expectancy')
+# plt.show()
 
-#Produce feature 13 Literacy
-plt.plot(feature13_train, training_targets, 'o')
-plt.plot(feature13_trainX, predicted_target13)
-plt.ylabel('mortality')
-plt.title('4.2 Feature 13 Literacy')
-plt.xlabel('Literacy')
-plt.show()
+# #Produce feature 13 Literacy
+# plt.plot(feature13_train, training_targets, 'o')
+# plt.plot(feature13_trainX, predicted_target13)
+# plt.ylabel('mortality')
+# plt.title('4.2 Feature 13 Literacy')
+# plt.xlabel('Literacy')
+# plt.show()
