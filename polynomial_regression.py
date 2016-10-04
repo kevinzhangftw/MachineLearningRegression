@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 # test_targets = values[101:,1]
 
 x = values[:,7:]
-x = a1.normalize_data(x)
+# x = a1.normalize_data(x)
 N_TRAIN = 100;
 training_set = x[0:N_TRAIN,:]
 test_set = x[N_TRAIN:,:]
@@ -23,7 +23,7 @@ test_targets = values[N_TRAIN:,1]
 #precondition: degree must range from 1 to 6
 def designify(set, degree):
   design_matrix = np.matrix(np.ones((set.shape[0],1)))
-  for i in range(1,degree):
+  for i in range(1,degree+1):
     design_matrix=np.concatenate((design_matrix, np.power(set, degree)), axis=1)
   return design_matrix
 
@@ -45,16 +45,14 @@ def testingErrorFrom(training_set,training_targets, testing_set,testing_targets,
 
 def weightsFrom(designMatrix, targets):
   inv = np.linalg.pinv(designMatrix)
-  return np.dot(inv,training_targets)
+  return np.dot(inv,targets)
 
 def differenceFrom(designMatrix, weights, targets):
   predicted_target = np.dot(designMatrix, weights)
   return predicted_target - targets
 
 def errorFrom(diff):
-  return np.sqrt(np.dot(diff.T, diff).item()/diff.shape[0]) 
-
- 
+  return np.sqrt((np.dot(diff.T, diff).item())/diff.shape[0]) 
 
 #question 4.2.1
 train_err = np.zeros(6)
