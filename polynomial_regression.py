@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 # test_targets = values[101:,1]
 
 x = values[:,7:]
-# x = a1.normalize_data(x)
+x = a1.normalize_data(x)
 N_TRAIN = 100;
 training_set = x[0:N_TRAIN,:]
 test_set = x[N_TRAIN:,:]
@@ -28,6 +28,9 @@ def designify(set, degree):
 
   designMatrix = np.ones((set.shape[0],1))
   for i in xrange(1,degree+1):
+  	print i
+  	print designMatrix.shape
+  	print np.power(set,i).shape
   	designMatrix = np.hstack((designMatrix, np.power(set,i) ) )
   return designMatrix
 
