@@ -22,10 +22,14 @@ test_targets = values[N_TRAIN:,1]
 
 #precondition: degree must range from 1 to 6
 def designify(set, degree):
-  design_matrix = np.matrix(np.ones((set.shape[0],1)))
-  for i in range(1,degree+1):
-    design_matrix=np.concatenate((design_matrix, np.power(set, degree)), axis=1)
-  return design_matrix
+  # designMatrix = np.matrix(np.ones((set.shape[0],1)))
+  # for i in range(1,degree+1):
+  #   designMatrix=np.concatenate((design_matrix, np.power(set, degree)), axis=1)
+
+  designMatrix = np.ones((set.shape[0],1))
+  for i in xrange(1,degree+1):
+  	designMatrix = np.hstack((designMatrix, np.power(set,i) ) )
+  return designMatrix
 
 def trainingErrorFrom(training_set,training_targets, degree):
   designMatrix = designify(training_set, degree)
