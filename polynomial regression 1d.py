@@ -52,19 +52,20 @@ def testError(weights, test_set, test_targets):
   test_error = np.sqrt(np.dot(diff.T, diff).item()/diff.shape[0])
   return test_error
 
+def gettingLinspacepredict(features_TRAIN, target_TRAIN, featureIndex, linspace):
+	linspaceposition = featureIndex - 3
+	linspace[linspaceposition] = np.transpose(np.asmatrix(np.linspace(np.amin(features_TRAIN[featureIndex]), np.amax(features_TRAIN[featureIndex]), num=500)))
+	weights = gettingWeights(features_TRAIN[featureIndex],target_TRAIN)
+	linspaceMatrix = designify(np.asmatrix(linspace[linspaceposition]))
+	linspacePredictTarget = np.dot(linspaceMatrix, weights)
+	return linspacePredictTarget
+
 for i in xrange(0,8):
 	features_TRAIN[i] = inputValues[0:N_TRAIN,i]
 	features_TEST[i] = inputValues[N_TRAIN:,i]
 	train_ERROR[i] = trainingError(features_TRAIN[i], target_TRAIN)
 	weights = gettingWeights(features_TRAIN[i],target_TRAIN)
 	test_ERROR[i] = testError(weights, features_TEST[i], target_TEST)
-
-#wish linspace from features_train 11 12 13
-linspace11 = np.linspace(np.amin(features_TRAIN[3]), np.amax(features_TRAIN[3]), num=500)
-weights11 = gettingWeights(features_TRAIN[3],target_TRAIN)
-linspaceMatrix11 = designify(np.asmatrix(linspace11).T)
-linspacePredict11 = np.dot(linspaceMatrix11, weights11)
-
 
 # Produce bar chart .
 # index = np.arange(8)
@@ -82,27 +83,22 @@ linspacePredict11 = np.dot(linspaceMatrix11, weights11)
 # plt.xlabel('features 8-15')
 # plt.show()
 
-#Produce feature 11 GNI
-plt.plot(features_TRAIN[3], target_TRAIN, 'o')
-plt.plot(features_TEST[3], target_TEST, 'o')
-plt.plot(linspace11, linspacePredict11)
-plt.ylabel('mortality')
-plt.title('4.2 Feature 11 GNI')
-plt.xlabel('GNI')
-plt.show()
+linspace = np.zeros((3, 500,1))
+linspacePredict = np.zeros((3, 500,1))
+linspacePredict[0] = gettingLinspacepredict(features_TRAIN, target_TRAIN, 3, linspace)
+linspacePredict[1] = gettingLinspacepredict(features_TRAIN, target_TRAIN, 4, linspace)
+linspacePredict[2] = gettingLinspacepredict(features_TRAIN, target_TRAIN, 5, linspace)
 
-# #Produce feature 12 Life expectancy
-# plt.plot(feature12_train, training_targets, 'o')
-# plt.plot(feature12_trainX, predicted_target12)
-# plt.ylabel('mortality')
-# plt.title('4.2 Feature 12 Life Expectancy')
-# plt.xlabel('Life expectancy')
-# plt.show()
+def gettingPlot(featureIndex, ylabel, title, xlabel):
+	plt.plot(features_TRAIN[featureIndex], target_TRAIN, 'o')
+	plt.plot(features_TEST[featureIndex], target_TEST, 'o')
+	linspaceposition = featureIndex - 3
+	plt.plot(linspace[linspaceposition], linspacePredict[linspaceposition])
+	plt.ylabel(ylabel)
+	plt.title(title)
+	plt.xlabel(xlabel)
+	plt.show()
 
-# #Produce feature 13 Literacy
-# plt.plot(feature13_train, training_targets, 'o')
-# plt.plot(feature13_trainX, predicted_target13)
-# plt.ylabel('mortality')
-# plt.title('4.2 Feature 13 Literacy')
-# plt.xlabel('Literacy')
-# plt.show()
+# gettingPlot(3, 'mortality', '4.2 Feature 11 GNI', 'GNI')
+gettingPlot(4, 'mortality', '4.2 Feature 12 Life Expectancy', 'Life expectancy')
+# gettingPlot(5, 'mortality', '4.2 Feature 13 Literacy', 'Literacy')
