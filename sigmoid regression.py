@@ -64,6 +64,24 @@ train_ERROR[i] = trainingError(features_TRAIN[i], target_TRAIN)
 weights = gettingWeights(features_TRAIN[i],target_TRAIN)
 test_ERROR[i] = testError(weights, features_TEST[i], target_TEST)
 
+#plot training error and test error 
+index = np.arange(1)
+barWidth = 0.35
+plt.bar(index, train_ERROR[3], 0.35, alpha=1,
+                 color='b',
+                 label='Train Error')
+
+plt.bar(index+barWidth, test_ERROR[3], 0.35, alpha=1,
+                 color='r',
+                 label='Test Error')
+plt.legend(['Training error','Test error'])
+plt.ylabel('RMSE')
+plt.title('4.3 Sigmoid Error Comparsion')
+plt.xlabel('features 11')
+plt.show()
+
+
+
 linspace = np.zeros((3, 500,1))
 linspacePredict = np.zeros((3, 500,1))
 linspacePredict[0] = gettingLinspacepredict(features_TRAIN, target_TRAIN, 3, linspace)
@@ -77,5 +95,5 @@ def gettingPlot(ylabel, title, xlabel):
   plt.xlabel(xlabel)
   plt.show()
 
-gettingPlot('mortality', '4.3 Sigmoid Feature 11', 'GNI')
+# gettingPlot('mortality', '4.3 Sigmoid Feature 11', 'GNI')
 
