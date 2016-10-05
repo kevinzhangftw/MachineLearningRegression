@@ -4,28 +4,40 @@ import matplotlib.pyplot as plt
 
 (countries, features, values) = a1.load_unicef_data()
 
-def designify(training_set, degree):
-  designMatrix = np.matrix(np.zeros((training_set.shape[0],1)))
-  for i in range(0, training_set.shape[0]):
-    designMatrix[i,0]=1
-  designMatrix = np.concatenate((designMatrix,training_set), axis=1)
-  designMatrix = np.concatenate((designMatrix,np.power(training_set,2)), axis=1)
+inputValues = values[:,7:]
+inputValues = a1.normalize_data(inputValues)
+N_TRAIN = 100;
+
+features_INPUT = inputValues[:N_TRAIN,:]
+target_INPUT = values[:N_TRAIN,1]
+
+def designify(training_set):
+  designMatrix = np.ones((training_set.shape[0],1))
+  for i in xrange(1,3):
+  	# print training_set.shape
+  	designMatrix = np.hstack((designMatrix, np.power(training_set,i) ) )
   return designMatrix
 
-def weightsFromTraining(training_set, training_targets, degree):
-  designMatrix = designify(training_set, degree)
+def gettingPredictedTarget(training_set, training_targets):
+  designMatrix = designify(training_set)
+  inv = np.linalg.pinv(designMatrix)
+  weights = np.dot(inv,training_targets)
+  predicted_target = np.dot(designMatrix, weights)
+  return predicted_target
+
+def gettingWeights(training_set,training_targets):
+  designMatrix = designify(training_set)
   inv = np.linalg.pinv(designMatrix)
   weights = np.dot(inv,training_targets)
   return weights
 
-def trainingError(training_set, training_targets, degree):
-  designMatrix = designify(training_set, degree)
+def trainingError(training_set, training_targets):
+  designMatrix = designify(training_set)
   inv = np.linalg.pinv(designMatrix)
   weights = np.dot(inv,training_targets)
   predicted_target = np.dot(designMatrix, weights)
   diff = predicted_target - training_targets
-  training_error = np.dot(diff.T, diff).item()
-  training_error = training_error/2
+  training_error = np.sqrt(np.dot(diff.T, diff).item()/diff.shape[0])
   return training_error
 
 def regularizer(weights, lamb):
@@ -39,44 +51,36 @@ def regularizedValidationError(training_set, training_targets, validation_set, v
   validation_error = np.dot(diff.T, diff).item() + regularizer(weights, lamb)
   return validation_error
 
-x = values[:,7:]
-x = a1.normalize_data(x)
-N_TRAIN = 100;
-x_train = x[0:N_TRAIN,:]
-x_test = x[N_TRAIN:,:]
+#TODO derive weights with regularizer 
+def gettingRegWeights(designMatrix, targets, lamb):
+	#w = (λI + Φ^T * Φ)^-1*Φ^T*t
+	designMatrixTranspose = designMatrix.T
+	designMatrixSquare = np.dot(designMatrixTranspose, designMatrix)
+	I = np.identity(designMatrixSquare.shape[0])
+	innerSum = lamb*I + designMatrixSquare
+	innerSumInversed = np.linalg.inv(innerSum)
+	regularMatrix = innerSumInversed*designMatrixTranspose
+	weights = regularMatrix*targets
+	return weights
 
+def gettingRegularizedRMS(features_TRAIN, target_TRAIN, lamb,features_VAL, target_VAL):
+	designMatrix = designify(features_TRAIN)
+	lamb = 1
+	weights = gettingRegWeights(designMatrix, target_TRAIN, lamb)
+	validationMatrix = designify(features_VAL) 
+	regularizedDiff = validationMatrix*weights - target_VAL
+	regularizedRMS = np.sqrt((regularizedDiff.T*regularizedDiff)/designMatrix.shape[0])
+	return regularizedRMS.item()
 
-x_train1 = x_train[11:N_TRAIN,:]
-x_train1_target = x_train[11:N_TRAIN,1]
+#TODO: split input features into training features and validation feature...
+features_TRAIN = features_INPUT[:90,:]
+target_TRAIN = target_INPUT[:90,:]
+features_VAL = features_INPUT[90:N_TRAIN,:]
+target_VAL = target_INPUT[90:N_TRAIN,:]
 
-x_val1 = x_train[0:10,:]
-x_val1_target = x_train[0:10,1]
+lamb =1
 
-#val_1 error at lambda 0
+regularizedRMSRow = np.zeros(10)
+regularizedRMSRow[0] = gettingRegularizedRMS(features_TRAIN, target_TRAIN, lamb,features_VAL, target_VAL)
 
-accumulatingError = np.zeros(10)
-errorForEachLamb= np.zeros(8)
-lamb = 0
-for x in xrange(-3,5):
-  if x==-3:
-    lamb = 0
-  else:
-    lamb = 10**x
-  for i in xrange(0,10):
-    #from i to i * 10
-    fromValue = i*10
-    toValue = i*10+10
-    validation_set = x_train[fromValue:toValue,:]
-    validation_target = x_train[fromValue:toValue,1]
-    #split
-    before_set = x_train[0:fromValue,:]
-    before_target = x_train[0:fromValue,1]
-    after_set = x_train[toValue:N_TRAIN,:]
-    after_target = x_train[toValue:N_TRAIN,1]
-    train_set = np.concatenate((before_set, after_set),axis=0)
-    train_target = np.concatenate((before_target, after_target),axis=0)
-    #TODO: get average row error
-    accumulatingError[i] = regularizedValidationError(train_set, train_target, validation_set, validation_target, lamb)
-  averageRowError = np.average(accumulatingError)
-  errorForEachLamb[x+3] =averageRowError
 
